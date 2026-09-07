@@ -13,8 +13,13 @@ import { MarketRecommendation } from '../types';
 import { formatINR } from '../utils/format';
 
 export default function MarketComparison() {
-  const [params] = useSearchParams();
-  const [cropId, setCropId] = useState(params.get('crop') || 'wheat');
+  const [params, setParams] = useSearchParams();
+  const defaultCropId = crops[0]?.id ?? '';
+  const requestedCropId = params.get('crop');
+  const initialCropId = crops.some((cropOption) => cropOption.id === requestedCropId)
+    ? requestedCropId!
+    : defaultCropId;
+  const [cropId, setCropId] = useState(initialCropId);
   const [quantity, setQuantity] = useState(30);
   const [transportRate, setTransportRate] = useState(22);
   const [recommendations, setRecommendations] = useState<MarketRecommendation[]>([]);
@@ -35,9 +40,20 @@ export default function MarketComparison() {
   };
 
   useEffect(() => {
-    runCompare();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!cropId) return;
+    let cancelled = false;
+    setRecommendations([]);
+    setLoading(true);
+    recommendBestMarket(cropId, quantity, transportRate).then((data) => {
+      if (!cancelled) {
+        setRecommendations(data);
+        setLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [cropId]);
 
   const calcResult = calculateNetEarnings(calcPrice, calcQty, calcDistance, calcRate);
   const crop = getCropById(cropId);
@@ -54,7 +70,14 @@ export default function MarketComparison() {
           <Select
             label="Crop"
             value={cropId}
-            onChange={(e) => setCropId(e.target.value)}
+            onChange={(e) => {
+              const nextCropId = e.target.value;
+              setCropId(nextCropId);
+              setParams((current) => {
+                current.set('crop', nextCropId);
+                return current;
+              });
+            }}
             options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${c.name}` }))}
           />
           <Input
@@ -93,7 +116,8 @@ export default function MarketComparison() {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {recommendations.map((r, i) => {
                 const market = getMarketById(r.marketId)!;
-                const priceInfo = getPriceForMarketCrop(cropId, r.marketId)!;
+                const priceInfo = getPriceForMarketCrop(cropId, r.marketId);
+                if (!market || !priceInfo) return null;
                 return (
                   <MarketComparisonCard
                     key={r.marketId}
