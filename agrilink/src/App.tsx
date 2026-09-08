@@ -13,6 +13,13 @@ import PriceAlerts from './pages/PriceAlerts';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import About from './pages/About';
+import Contact from './pages/Contact';
+import AdminContactRequests from './pages/AdminContactRequests';
+import Testimonials from './pages/Testimonials';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import { ThemeSelector } from './components/ThemeSelector';
+import { AgriChatbot } from './components/AgriChatbot';
 
 export default function App() {
   return (
@@ -31,10 +38,17 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/admin/contact-requests" element={<AdminContactRequests />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       <Footer />
+      <ThemeSelector />
+      <AgriChatbot />
     </div>
   );
 }

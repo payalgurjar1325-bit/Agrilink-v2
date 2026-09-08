@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Inbox, Loader2 } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export function Modal({
   open,
@@ -12,13 +13,14 @@ export function Modal({
   title: string;
   children: React.ReactNode;
 }) {
+  const { t } = useApp();
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-soil-900/40 p-0 sm:items-center sm:p-4">
       <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-2xl bg-white sm:max-w-lg sm:rounded-card">
         <div className="flex items-center justify-between border-b border-soil-100 px-5 py-4">
           <h3 className="text-lg font-semibold text-soil-900">{title}</h3>
-          <button onClick={onClose} className="rounded-full p-1.5 text-soil-900/60 hover:bg-soil-100" aria-label="Close">
+          <button onClick={onClose} className="rounded-full p-1.5 text-soil-900/60 hover:bg-soil-100" aria-label={t('Close')}>
             <X size={18} />
           </button>
         </div>

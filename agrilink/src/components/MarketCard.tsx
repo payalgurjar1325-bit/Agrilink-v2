@@ -2,6 +2,7 @@ import React from 'react';
 import { MapPin, ArrowRight } from 'lucide-react';
 import { Market, Crop, MarketPrice } from '../types';
 import { Button } from './Button';
+import { useApp } from '../context/AppContext';
 
 export function MarketCard({
   market,
@@ -16,6 +17,7 @@ export function MarketCard({
   popularCrops: Crop[];
   onView?: () => void;
 }) {
+  const { t } = useApp();
   return (
     <div className="flex flex-col gap-3 rounded-card border border-soil-100 bg-white p-4">
       <div className="flex items-start justify-between">
@@ -25,7 +27,7 @@ export function MarketCard({
             <MapPin size={12} /> {market.distanceKm} km away
           </span>
         </div>
-        <span className="rounded-full bg-field-50 px-2.5 py-1 text-xs font-medium text-field-700">Open</span>
+        <span className="rounded-full bg-field-50 px-2.5 py-1 text-xs font-medium text-field-700">{t('Open')}</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {popularCrops.map((c) => (
@@ -35,13 +37,13 @@ export function MarketCard({
         ))}
       </div>
       <div className="rounded-card bg-field-50 px-3 py-2.5">
-        <div className="text-xs text-soil-900/60">Best current opportunity</div>
+        <div className="text-xs text-soil-900/60">{t('Best current opportunity')}</div>
         <div className="font-semibold text-field-800">
-          {bestCrop.name} · ₹{bestPrice.modalPrice.toLocaleString('en-IN')}/{bestCrop.unit}
+          {t(bestCrop.name)} · ₹{bestPrice.modalPrice.toLocaleString('en-IN')}/{t(bestCrop.unit)}
         </div>
       </div>
       <Button variant="secondary" size="sm" onClick={onView}>
-        View Prices <ArrowRight size={14} />
+        {t('View Prices')} <ArrowRight size={14} />
       </Button>
     </div>
   );

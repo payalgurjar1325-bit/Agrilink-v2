@@ -9,12 +9,12 @@ export default function Login() {
   const [role, setRole] = useState<'farmer' | 'buyer'>('farmer');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useApp();
+  const { login, t } = useApp();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login({ name: role === 'farmer' ? 'Ramesh' : 'Buyer', role });
+    login({ name: identifier.trim(), role });
     navigate(role === 'farmer' ? '/dashboard' : '/marketplace');
   };
 
@@ -24,8 +24,8 @@ export default function Login() {
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-field-700 text-white">
           <Sprout size={22} />
         </span>
-        <h1 className="mt-3 text-2xl font-semibold text-soil-900">Welcome back</h1>
-        <p className="mt-1 text-sm text-soil-900/60">Log in to AgriLink to continue.</p>
+        <h1 className="mt-3 text-2xl font-semibold text-soil-900">{t('Welcome back')}</h1>
+        <p className="mt-1 text-sm text-soil-900/60">{t('Log in to AgriLink to continue.')}</p>
       </div>
 
       <div className="mb-6 grid grid-cols-2 rounded-card border border-soil-100 bg-white p-1">
@@ -35,22 +35,22 @@ export default function Login() {
             onClick={() => setRole(r)}
             className={`rounded-card py-2.5 text-sm font-medium capitalize transition-colors ${role === r ? 'bg-field-700 text-white' : 'text-soil-900/60'}`}
           >
-            {r}
+            {t(r === 'farmer' ? 'Farmer' : 'Buyer')}
           </button>
         ))}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 rounded-card border border-soil-100 bg-white p-5">
-        <Input label="Mobile Number / Email" placeholder="Enter mobile number or email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
-        <Input label="Password" type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <Input label={t('Mobile Number / Email')} placeholder="Enter mobile number or email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
+        <Input label={t('Password')} type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <div className="flex justify-end">
-          <Link to="#" className="text-xs font-medium text-field-700 hover:underline">Forgot Password?</Link>
+          <Link to="#" className="text-xs font-medium text-field-700 hover:underline">{t('Forgot Password?')}</Link>
         </div>
-        <Button type="submit" fullWidth size="lg">Login as {role === 'farmer' ? 'Farmer' : 'Buyer'}</Button>
+        <Button type="submit" fullWidth size="lg">{t('Login')} {t('as')} {t(role === 'farmer' ? 'Farmer' : 'Buyer')}</Button>
       </form>
 
       <p className="mt-5 text-center text-sm text-soil-900/60">
-        New to AgriLink? <Link to="/register" className="font-medium text-field-700 hover:underline">Create Account</Link>
+        New to AgriLink? <Link to="/register" className="font-medium text-field-700 hover:underline">{t('Create Account')}</Link>
       </p>
     </div>
   );

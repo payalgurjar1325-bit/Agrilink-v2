@@ -7,11 +7,12 @@ import {
 import { Button } from '../components/Button';
 import { Select } from '../components/FormControls';
 import { crops } from '../data/crops';
-import { markets } from '../data/markets';
+import { districtsByState, markets, states } from '../data/markets';
 import { marketPrices } from '../data/marketPrices';
 import { getMarketById } from '../data/markets';
 import { getCropById } from '../data/crops';
 import { PriceCard } from '../components/PriceCard';
+import { useApp } from '../context/AppContext';
 
 const steps = [
   { icon: SlidersHorizontal, title: 'Select your crop', desc: 'Choose the crop and quantity you plan to sell.' },
@@ -29,6 +30,7 @@ const benefits = [
 ];
 
 export default function Home() {
+  const { t } = useApp();
   const navigate = useNavigate();
   const [cropId, setCropId] = useState('');
   const [state, setState] = useState('');
@@ -59,18 +61,18 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:items-center lg:px-8 lg:py-20">
           <div>
             <h1 className="font-display text-4xl font-semibold leading-tight text-soil-900 sm:text-5xl">
-              Better markets. Better prices. Better income.
+              {t('Better markets. Better prices. Better income.')}
             </h1>
             <p className="mt-5 max-w-md text-[17px] leading-relaxed text-soil-900/70">
               Compare mandi prices, discover better markets and connect directly with trusted buyers — all in one place.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" onClick={() => navigate('/market-prices')}>Check Market Prices</Button>
-              <Button size="lg" variant="secondary" onClick={() => navigate('/sell-produce')}>Sell Your Produce</Button>
+              <Button size="lg" onClick={() => navigate('/market-prices')}>{t('Check Market Prices')}</Button>
+              <Button size="lg" variant="secondary" onClick={() => navigate('/sell-produce')}>{t('Sell Your Produce')}</Button>
             </div>
           </div>
           <div className="rounded-card border border-field-200 bg-white p-5">
-            <div className="text-sm font-medium text-soil-900/60">Today’s highlight</div>
+            <div className="text-sm font-medium text-soil-900/60">{t('Today’s highlight')}</div>
             <div className="mt-2 flex items-center justify-between">
               <div>
                 <div className="text-lg font-semibold text-soil-900">Soybean · Sehore Mandi</div>
@@ -80,11 +82,11 @@ export default function Home() {
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-card bg-field-50 p-3">
-                <div className="text-xs text-soil-900/50">Modal Price</div>
+                <div className="text-xs text-soil-900/50">{t('Modal Price')}</div>
                 <div className="text-xl font-bold text-soil-900">₹4,680</div>
               </div>
               <div className="rounded-card bg-field-700 p-3 text-white">
-                <div className="text-xs text-field-100">Est. Net Earnings*</div>
+                <div className="text-xs text-field-100">{t('Est. Net Earnings*')}</div>
                 <div className="text-xl font-bold">₹1,39,500</div>
               </div>
             </div>
@@ -96,29 +98,29 @@ export default function Home() {
       {/* Quick crop search */}
       <section className="mx-auto -mt-6 max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-card border border-soil-100 bg-white p-5 shadow-card sm:p-6">
-          <h2 className="text-base font-semibold text-soil-900">Find the best market for your crop</h2>
+          <h2 className="text-base font-semibold text-soil-900">{t('Find the best market for your crop')}</h2>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Select
-              placeholder="Select crop"
+              placeholder={t('Select crop')}
               value={cropId}
               onChange={(e) => setCropId(e.target.value)}
-              options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${c.name}` }))}
+              options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${t(c.name)}` }))}
             />
             <Select
-              placeholder="Select state"
+              placeholder={t('Select state')}
               value={state}
-              onChange={(e) => setState(e.target.value)}
-              options={[...new Set(markets.map((m) => m.state))].map((s) => ({ value: s, label: s }))}
+              onChange={(e) => { setState(e.target.value); setDistrict(''); }}
+              options={states.map((s) => ({ value: s, label: s }))}
             />
             <Select
-              placeholder="District / Location"
+              placeholder={t('District / Location')}
               value={district}
               onChange={(e) => setDistrict(e.target.value)}
-              options={[...new Set(markets.map((m) => m.district))].map((d) => ({ value: d, label: d }))}
+              options={(districtsByState[state] ?? [...new Set(markets.map((m) => m.district))]).map((d) => ({ value: d, label: d }))}
             />
           </div>
           <Button className="mt-4" onClick={handleSearch}>
-            Find Best Market <ArrowRight size={16} />
+            {t('Find Best Market')} <ArrowRight size={16} />
           </Button>
         </div>
       </section>
@@ -126,9 +128,9 @@ export default function Home() {
       {/* Today's market prices */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-soil-900">Today’s Market Prices</h2>
+          <h2 className="text-2xl font-semibold text-soil-900">{t('Today’s Market Prices')}</h2>
           <button onClick={() => navigate('/market-prices')} className="text-sm font-medium text-field-700 hover:underline">
-            View all
+            {t('View all')}
           </button>
         </div>
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,7 +143,7 @@ export default function Home() {
       {/* How AgriLink works */}
       <section className="bg-field-50/50 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-semibold text-soil-900">How AgriLink Works</h2>
+          <h2 className="text-2xl font-semibold text-soil-900">{t('How AgriLink Works')}</h2>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s, i) => (
               <div key={s.title} className="rounded-card bg-white p-5">
@@ -158,7 +160,7 @@ export default function Home() {
 
       {/* Key benefits */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold text-soil-900">Key Benefits</h2>
+          <h2 className="text-2xl font-semibold text-soil-900">{t('Key Benefits')}</h2>
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {benefits.map((b) => (
             <div key={b.title} className="rounded-card border border-soil-100 p-5">

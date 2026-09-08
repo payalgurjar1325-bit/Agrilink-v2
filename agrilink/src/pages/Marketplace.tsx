@@ -7,10 +7,12 @@ import { EmptyState, LoadingState, Modal } from '../components/Feedback';
 import { Button } from '../components/Button';
 import { fetchListings, EnrichedListing, ListingFilters } from '../services/marketplaceService';
 import { markets } from '../data/markets';
+import { useApp } from '../context/AppContext';
 
 const categories = ['Vegetables', 'Fruits', 'Grains', 'Pulses', 'Oilseeds', 'Spices'];
 
 export default function Marketplace() {
+  const { t } = useApp();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
@@ -39,22 +41,22 @@ export default function Marketplace() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">Farmer Marketplace</h1>
-      <p className="mt-1.5 text-soil-900/60">Connect directly with farmers and verified buyers.</p>
+      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">{t('Farmer Marketplace')}</h1>
+      <p className="mt-1.5 text-soil-900/60">{t('Connect directly with farmers and verified buyers.')}</p>
 
       <div className="mt-6 rounded-card border border-soil-100 bg-white p-4 sm:p-5">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <SearchBar value={search} onChange={setSearch} placeholder="Search produce, farmer, location..." />
+            <SearchBar value={search} onChange={setSearch} placeholder={t('Search produce, farmer, location...')} />
           </div>
           <Select
-            placeholder="All categories"
+            placeholder={t('All categories')}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            options={categories.map((c) => ({ value: c, label: c }))}
+            options={categories.map((c) => ({ value: c, label: t(c) }))}
           />
           <Select
-            placeholder="All locations"
+            placeholder={t('All locations')}
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             options={[...new Set(markets.map((m) => m.district))].map((d) => ({ value: d, label: d }))}
@@ -82,9 +84,9 @@ export default function Marketplace() {
 
       <div className="mt-8">
         {loading ? (
-          <LoadingState label="Loading listings..." />
+          <LoadingState label={t('Loading listings...')} />
         ) : listings.length === 0 ? (
-          <EmptyState title="No listings match your filters" description="Try widening your search or clearing a filter." />
+          <EmptyState title={t('No listings match your filters')} description={t('Try widening your search or clearing a filter.')} />
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {listings.map((l) => (
@@ -99,14 +101,14 @@ export default function Marketplace() {
         )}
       </div>
 
-      <Modal open={!!contactListing} onClose={() => setContactListing(null)} title="Contact Farmer">
+      <Modal open={!!contactListing} onClose={() => setContactListing(null)} title={t('Contact Farmer')}>
         {contactListing && (
           <div className="space-y-4">
             <p className="text-sm text-soil-900/70">
               Send an enquiry to <strong>{contactListing.farmerName}</strong> about their {contactListing.crop.name} listing.
               This is a prototype — no message is actually sent.
             </p>
-            <Button fullWidth onClick={() => setContactListing(null)}>Send Enquiry</Button>
+            <Button fullWidth onClick={() => setContactListing(null)}>{t('Send Enquiry')}</Button>
           </div>
         )}
       </Modal>

@@ -4,6 +4,7 @@ import { EnrichedListing } from '../services/marketplaceService';
 import { formatDate, formatINR } from '../utils/format';
 import { Button } from './Button';
 import { Badge } from './Badge';
+import { useApp } from '../context/AppContext';
 
 export function ProductCard({
   listing,
@@ -14,6 +15,7 @@ export function ProductCard({
   onViewDetails: () => void;
   onContact: () => void;
 }) {
+  const { t } = useApp();
   return (
     <div className="flex flex-col overflow-hidden rounded-card border border-soil-100 bg-white">
       <div
@@ -24,8 +26,8 @@ export function ProductCard({
       </div>
       <div className="flex flex-1 flex-col gap-2.5 p-4">
         <div className="flex items-start justify-between gap-2">
-          <h4 className="font-semibold text-soil-900">{listing.crop.name}</h4>
-          <Badge tone="neutral">Grade {listing.grade}</Badge>
+          <h4 className="font-semibold text-soil-900">{t(listing.crop.name)}</h4>
+          <Badge tone="neutral">{t('Grade')} {listing.grade}</Badge>
         </div>
         <div className="flex items-center gap-1.5 text-sm text-soil-900/70">
           {listing.farmerName}
@@ -44,14 +46,14 @@ export function ProductCard({
           </span>
         </div>
         <div className="flex items-center gap-1 text-xs text-soil-900/40">
-          <Calendar size={11} /> Harvested {formatDate(listing.harvestDate)}
+          <Calendar size={11} /> {t('Harvested')} {formatDate(listing.harvestDate)}
         </div>
         <div className="mt-1 flex gap-2">
           <Button variant="secondary" size="sm" className="flex-1" onClick={onViewDetails}>
-            View Details
+            {t('View Details')}
           </Button>
           <Button variant="primary" size="sm" className="flex-1" onClick={onContact}>
-            Contact
+            {t('Contact')}
           </Button>
         </div>
       </div>

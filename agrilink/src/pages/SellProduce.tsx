@@ -3,8 +3,9 @@ import { CheckCircle2, UploadCloud } from 'lucide-react';
 import { Input, Select, Textarea } from '../components/FormControls';
 import { Button } from '../components/Button';
 import { crops } from '../data/crops';
-import { markets } from '../data/markets';
+import { districtsByState, markets, states } from '../data/markets';
 import { publishListing } from '../services/marketplaceService';
+import { useApp } from '../context/AppContext';
 
 interface FormState {
   cropId: string;
@@ -30,6 +31,7 @@ const initialState: FormState = {
 };
 
 export default function SellProduce() {
+  const { t } = useApp();
   const [form, setForm] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -83,13 +85,13 @@ export default function SellProduce() {
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-field-50 text-field-700">
           <CheckCircle2 size={28} />
         </div>
-        <h2 className="mt-4 text-xl font-semibold text-soil-900">Listing published</h2>
+        <h2 className="mt-4 text-xl font-semibold text-soil-900">{t('Listing published')}</h2>
         <p className="mt-2 text-sm text-soil-900/60">
           Your produce is now visible to buyers on the AgriLink Marketplace.
         </p>
         <div className="mt-6 flex justify-center gap-3">
-          <Button variant="secondary" onClick={() => { setForm(initialState); setSuccess(false); }}>List Another</Button>
-          <Button onClick={() => (window.location.href = '/marketplace')}>View Marketplace</Button>
+          <Button variant="secondary" onClick={() => { setForm(initialState); setSuccess(false); }}>{t('List Another')}</Button>
+          <Button onClick={() => (window.location.href = '/marketplace')}>{t('View Marketplace')}</Button>
         </div>
       </div>
     );
@@ -97,27 +99,27 @@ export default function SellProduce() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">Sell Your Produce</h1>
+      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">{t('Sell Your Produce')}</h1>
       <p className="mt-1.5 text-soil-900/60">List your crop so buyers can find and contact you directly.</p>
 
       <form onSubmit={handleSubmit} className="mt-7 space-y-6 rounded-card border border-soil-100 bg-white p-5 sm:p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Select
-            label="Crop Name"
-            placeholder="Select crop"
+            label={t('Crop Name')}
+            placeholder={t('Select crop')}
             value={form.cropId}
             onChange={(e) => update('cropId', e.target.value)}
-            options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${c.name}` }))}
+            options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${t(c.name)}` }))}
             error={errors.cropId}
           />
-          <Input label="Variety (optional)" placeholder="e.g. Sharbati" value={form.variety} onChange={(e) => update('variety', e.target.value)} />
+          <Input label={t('Variety (optional)')} placeholder="e.g. Sharbati" value={form.variety} onChange={(e) => update('variety', e.target.value)} />
         </div>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <Input label="Quantity" type="number" min={0} value={form.quantity} onChange={(e) => update('quantity', e.target.value)} error={errors.quantity} />
-          <Select label="Unit" value={form.quantityUnit} onChange={(e) => update('quantityUnit', e.target.value)} options={[{ value: 'Quintal', label: 'Quintal' }, { value: 'Kg', label: 'Kg' }, { value: 'Ton', label: 'Ton' }]} />
-          <Input label="Expected Price" type="number" min={0} value={form.price} onChange={(e) => update('price', e.target.value)} error={errors.price} />
-          <Select label="Price Unit" value={form.priceUnit} onChange={(e) => update('priceUnit', e.target.value)} options={[{ value: '/Quintal', label: 'Per Quintal' }, { value: '/Kg', label: 'Per Kg' }]} />
+          <Input label={t('Quantity')} type="number" min={0} value={form.quantity} onChange={(e) => update('quantity', e.target.value)} error={errors.quantity} />
+          <Select label={t('Unit')} value={form.quantityUnit} onChange={(e) => update('quantityUnit', e.target.value)} options={[{ value: 'Quintal', label: t('Quintal') }, { value: 'Kg', label: t('Kg') }, { value: 'Ton', label: t('Ton') }]} />
+          <Input label={t('Expected Price')} type="number" min={0} value={form.price} onChange={(e) => update('price', e.target.value)} error={errors.price} />
+          <Select label={t('Price Unit')} value={form.priceUnit} onChange={(e) => update('priceUnit', e.target.value)} options={[{ value: '/Quintal', label: `Per ${t('Quintal')}` }, { value: '/Kg', label: `Per ${t('Kg')}` }]} />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -125,8 +127,8 @@ export default function SellProduce() {
             label="State"
             placeholder="Select state"
             value={form.state}
-            onChange={(e) => update('state', e.target.value)}
-            options={[...new Set(markets.map((m) => m.state))].map((s) => ({ value: s, label: s }))}
+            onChange={(e) => setForm((f) => ({ ...f, state: e.target.value, district: '' }))}
+            options={states.map((s) => ({ value: s, label: s }))}
             error={errors.state}
           />
           <Select
@@ -134,14 +136,14 @@ export default function SellProduce() {
             placeholder="Select district"
             value={form.district}
             onChange={(e) => update('district', e.target.value)}
-            options={[...new Set(markets.map((m) => m.district))].map((d) => ({ value: d, label: d }))}
+            options={(districtsByState[form.state] ?? [...new Set(markets.map((m) => m.district))]).map((d) => ({ value: d, label: d }))}
             error={errors.district}
           />
-          <Input label="Village / Location" placeholder="e.g. Berasia" value={form.village} onChange={(e) => update('village', e.target.value)} error={errors.village} />
+          <Input label={t('Village / Location')} placeholder="e.g. Berasia" value={form.village} onChange={(e) => update('village', e.target.value)} error={errors.village} />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Input label="Harvest Date" type="date" value={form.harvestDate} onChange={(e) => update('harvestDate', e.target.value)} error={errors.harvestDate} />
+          <Input label={t('Harvest Date')} type="date" value={form.harvestDate} onChange={(e) => update('harvestDate', e.target.value)} error={errors.harvestDate} />
           <Select
             label="Quality Grade"
             placeholder="Select grade"
@@ -152,10 +154,10 @@ export default function SellProduce() {
           />
         </div>
 
-        <Textarea label="Product Description" rows={4} placeholder="Describe quality, moisture content, packaging, etc." value={form.description} onChange={(e) => update('description', e.target.value)} />
+        <Textarea label={t('Product Description')} rows={4} placeholder="Describe quality, moisture content, packaging, etc." value={form.description} onChange={(e) => update('description', e.target.value)} />
 
         <div>
-          <label className="text-sm font-medium text-soil-900">Image Upload</label>
+          <label className="text-sm font-medium text-soil-900">{t('Image Upload')}</label>
           <div className="mt-1.5 flex flex-col items-center justify-center gap-2 rounded-card border border-dashed border-soil-100 bg-soil-50 px-4 py-8 text-center">
             <UploadCloud size={22} className="text-soil-900/40" />
             <span className="text-sm text-soil-900/50">Prototype only — image upload is not wired up.</span>
@@ -163,14 +165,14 @@ export default function SellProduce() {
         </div>
 
         <Select
-          label="Contact Preference"
+          label={t('Contact Preference')}
           value={form.contactPreference}
           onChange={(e) => update('contactPreference', e.target.value)}
           options={[{ value: 'call', label: 'Phone Call' }, { value: 'sms', label: 'SMS' }, { value: 'app', label: 'In-app messages' }]}
         />
 
         <Button type="submit" size="lg" fullWidth disabled={submitting}>
-          {submitting ? 'Publishing...' : 'Publish Listing'}
+          {submitting ? t('Publishing...') : t('Publish Listing')}
         </Button>
       </form>
     </div>

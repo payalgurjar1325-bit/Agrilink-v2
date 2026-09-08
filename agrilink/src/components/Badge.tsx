@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 type BadgeTone = 'green' | 'red' | 'amber' | 'neutral';
 
@@ -19,6 +20,7 @@ export function Badge({ tone = 'neutral', children }: { tone?: BadgeTone; childr
 }
 
 export function TrendBadge({ trend, changePercent }: { trend: 'up' | 'down' | 'stable'; changePercent: number }) {
+  const { t } = useApp();
   if (trend === 'up') {
     return (
       <Badge tone="green">
@@ -35,17 +37,18 @@ export function TrendBadge({ trend, changePercent }: { trend: 'up' | 'down' | 's
   }
   return (
     <Badge tone="neutral">
-      <Minus size={13} /> Stable
+    <Minus size={13} /> {t('Stable')}
     </Badge>
   );
 }
 
 export function DemandBadge({ level }: { level: 'high' | 'medium' | 'low' | 'stable' }) {
+  const { t } = useApp();
   const map = {
-    high: { tone: 'green' as const, label: 'High Demand' },
-    medium: { tone: 'amber' as const, label: 'Medium Demand' },
-    low: { tone: 'red' as const, label: 'Low Demand' },
-    stable: { tone: 'neutral' as const, label: 'Stable Demand' },
+    high: { tone: 'green' as const, label: t('High Demand') },
+    medium: { tone: 'amber' as const, label: t('Medium Demand') },
+    low: { tone: 'red' as const, label: t('Low Demand') },
+    stable: { tone: 'neutral' as const, label: t('Stable') },
   };
   const { tone, label } = map[level];
   return <Badge tone={tone}>{label}</Badge>;

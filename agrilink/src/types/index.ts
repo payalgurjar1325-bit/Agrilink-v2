@@ -2,7 +2,39 @@ export type PriceTrend = 'up' | 'down' | 'stable';
 export type DemandLevel = 'high' | 'medium' | 'low' | 'stable';
 export type QualityGrade = 'A' | 'B' | 'C';
 export type UserRole = 'farmer' | 'buyer';
-export type Language = 'en' | 'hi';
+export type Language = 'en' | 'hi' | 'mr';
+export type ContactRequestStatus = 'Pending' | 'Approved' | 'Rejected' | 'Resolved';
+export type ReviewStatus = 'Pending' | 'Approved' | 'Rejected';
+
+export interface ContactRequest {
+  id: string;
+  name: string;
+  contact: string;
+  subject: string;
+  message: string;
+  date: string;
+  status: ContactRequestStatus;
+  solution: string;
+}
+
+export interface RegisteredUser {
+  id: string;
+  name: string;
+  role: UserRole;
+  contact: string;
+  status: 'Active' | 'Inactive';
+  registrationDate: string;
+}
+
+export interface Review {
+  id: string;
+  name: string;
+  location: string;
+  review: string;
+  rating: number;
+  image: string;
+  status: ReviewStatus;
+}
 
 export interface Crop {
   id: string;

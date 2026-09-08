@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Target, Users2, LineChart } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 const pillars = [
   { icon: Target, title: 'Price transparency', desc: 'Real-time modal prices across mandis, in one place, instead of scattered word-of-mouth.' },
@@ -9,9 +10,10 @@ const pillars = [
 ];
 
 export default function About() {
+  const { t } = useApp();
   return (
     <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">About AgriLink</h1>
+      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">{t('About')}</h1>
       <p className="mt-4 max-w-2xl leading-relaxed text-soil-900/70">
         AgriLink is a Smart India Hackathon prototype addressing the problem statement
         <em> "Strengthening Market Linkages and Price Discovery for Farmers."</em> Indian farmers

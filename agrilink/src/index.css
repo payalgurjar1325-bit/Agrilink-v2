@@ -6,6 +6,58 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  --field-50: 241 246 238;
+  --field-100: 226 238 219;
+  --field-200: 199 223 186;
+  --field-300: 163 203 143;
+  --field-400: 124 181 102;
+  --field-500: 90 154 69;
+  --field-600: 67 122 50;
+  --field-700: 52 95 39;
+  --field-800: 42 76 33;
+  --field-900: 31 56 25;
+}
+
+:root[data-theme='light-green'] {
+  --field-50: 244 249 242;
+  --field-100: 229 240 225;
+  --field-200: 205 224 198;
+  --field-300: 174 204 163;
+  --field-400: 137 177 123;
+  --field-500: 103 151 91;
+  --field-600: 77 125 68;
+  --field-700: 59 99 51;
+  --field-800: 45 77 40;
+  --field-900: 34 59 31;
+}
+
+:root[data-theme='light-yellow'] {
+  --field-50: 255 252 238;
+  --field-100: 250 242 207;
+  --field-200: 242 224 158;
+  --field-300: 229 201 106;
+  --field-400: 207 169 65;
+  --field-500: 178 139 45;
+  --field-600: 145 109 34;
+  --field-700: 113 84 29;
+  --field-800: 87 64 25;
+  --field-900: 64 47 22;
+}
+
+:root[data-theme='light-blue'] {
+  --field-50: 242 249 252;
+  --field-100: 222 239 247;
+  --field-200: 190 220 234;
+  --field-300: 151 194 214;
+  --field-400: 111 164 188;
+  --field-500: 82 137 163;
+  --field-600: 61 111 138;
+  --field-700: 45 86 111;
+  --field-800: 35 66 86;
+  --field-900: 27 50 67;
+}
+
 body {
   @apply bg-soil-50 text-soil-900 antialiased;
   font-family: 'Inter', system-ui, sans-serif;

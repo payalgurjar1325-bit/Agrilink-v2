@@ -16,8 +16,10 @@ import { fetchPriceHistory } from '../services/marketService';
 import { recommendBestMarket } from '../services/marketService';
 import { MarketRecommendation, PriceHistoryPoint } from '../types';
 import { formatINR } from '../utils/format';
+import { useApp } from '../context/AppContext';
 
 export default function Dashboard() {
+  const { t, user } = useApp();
   const navigate = useNavigate();
   const [range, setRange] = useState<7 | 30 | 90>(30);
   const [trendCrop, setTrendCrop] = useState('wheat');
@@ -38,11 +40,11 @@ export default function Dashboard() {
   }, []);
 
   const stats = [
-    { icon: Package, label: 'Active Listings', value: String(myListings.filter((l) => l.status === 'active').length) },
-    { icon: MessageSquare, label: 'Total Enquiries', value: String(enquiries.length) },
-    { icon: TrendingUp, label: 'Best Crop Price Today', value: bestTodayPrice ? `₹${bestTodayPrice.modalPrice.toLocaleString('en-IN')}` : '—', sub: getCropById(bestTodayPrice?.cropId ?? '')?.name },
-    { icon: Bookmark, label: 'Saved Markets', value: '3' },
-    { icon: Bell, label: 'Price Alerts', value: '2', onClick: () => navigate('/price-alerts') },
+    { icon: Package, label: t('Active Listings'), value: String(myListings.filter((l) => l.status === 'active').length) },
+    { icon: MessageSquare, label: t('Total Enquiries'), value: String(enquiries.length) },
+    { icon: TrendingUp, label: t('Best Crop Price Today'), value: bestTodayPrice ? `₹${bestTodayPrice.modalPrice.toLocaleString('en-IN')}` : '—', sub: t(getCropById(bestTodayPrice?.cropId ?? '')?.name ?? '') },
+    { icon: Bookmark, label: t('Saved Markets'), value: '3' },
+    { icon: Bell, label: t('Price Alerts'), value: '2', onClick: () => navigate('/price-alerts') },
   ];
 
   const nearby = markets.slice(0, 3).map((m) => {
@@ -53,7 +55,7 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">Namaste, Ramesh 👋</h1>
+      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">{user?.name ? `Namaste, ${user.name} 👋` : 'Namaste 👋'}</h1>
       <p className="mt-1.5 text-soil-900/60">Here’s what’s happening with your crops and markets today.</p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
@@ -64,8 +66,8 @@ export default function Dashboard() {
         {/* My active listings */}
         <div className="rounded-card border border-soil-100 bg-white p-5 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-soil-900">My Active Listings</h2>
-            <Button size="sm" variant="secondary" onClick={() => navigate('/sell-produce')}>+ New Listing</Button>
+            <h2 className="font-semibold text-soil-900">{t('My Active Listings')}</h2>
+            <Button size="sm" variant="secondary" onClick={() => navigate('/sell-produce')}>+ {t('Publish Listing')}</Button>
           </div>
           <div className="mt-4 space-y-3">
             {myListings.map((l) => {
@@ -121,7 +123,7 @@ export default function Dashboard() {
 
       {/* Recent enquiries */}
       <div className="mt-8 rounded-card border border-soil-100 bg-white p-5">
-        <h2 className="font-semibold text-soil-900">Recent Enquiries</h2>
+        <h2 className="font-semibold text-soil-900">{t('Recent Enquiries')}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="text-xs uppercase tracking-wide text-soil-900/50">
@@ -198,7 +200,7 @@ export default function Dashboard() {
       {/* Demand insights + nearby markets */}
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-card border border-soil-100 bg-white p-5">
-          <h2 className="font-semibold text-soil-900">Market Demand</h2>
+          <h2 className="font-semibold text-soil-900">{t('Market Demand')}</h2>
           <div className="mt-4 space-y-3">
             {demandInsights.map((d) => {
               const crop = getCropById(d.cropId)!;
@@ -216,7 +218,7 @@ export default function Dashboard() {
         </div>
 
         <div>
-          <h2 className="mb-4 font-semibold text-soil-900">Markets Near You</h2>
+          <h2 className="mb-4 font-semibold text-soil-900">{t('Markets Near You')}</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1">
             {nearby.map(({ market, best, crop }) => (
               <MarketCard

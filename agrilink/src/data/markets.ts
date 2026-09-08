@@ -1,5 +1,21 @@
 import { Market } from '../types';
 
+export const states = ['Madhya Pradesh', 'Maharashtra'];
+
+export const districtsByState: Record<string, string[]> = {
+  'Madhya Pradesh': [...new Set([
+    'Bhopal', 'Sehore', 'Indore', 'Ujjain', 'Vidisha', 'Narmadapuram', 'Raisen', 'Dewas',
+  ])],
+  Maharashtra: [
+    'Mumbai City', 'Mumbai Suburban', 'Pune', 'Thane', 'Nashik', 'Nagpur',
+    'Aurangabad/Chhatrapati Sambhajinagar', 'Kolhapur', 'Satara', 'Sangli', 'Solapur',
+    'Ahmednagar/Ahilyanagar', 'Jalgaon', 'Dhule', 'Nandurbar', 'Raigad', 'Ratnagiri', 'Sindhudurg',
+    'Palghar', 'Amravati', 'Akola', 'Washim', 'Buldhana', 'Yavatmal', 'Wardha',
+    'Bhandara', 'Gondia', 'Chandrapur', 'Gadchiroli', 'Latur', 'Nanded', 'Hingoli',
+    'Parbhani', 'Beed', 'Osmanabad/Dharashiv',
+  ],
+};
+
 export const markets: Market[] = [
   { id: 'bhopal', name: 'Bhopal Mandi', district: 'Bhopal', state: 'Madhya Pradesh', distanceKm: 12, lat: 23.2599, lng: 77.4126 },
   { id: 'sehore', name: 'Sehore Mandi', district: 'Sehore', state: 'Madhya Pradesh', distanceKm: 41, lat: 23.2, lng: 77.08 },

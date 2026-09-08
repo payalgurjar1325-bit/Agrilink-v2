@@ -11,8 +11,10 @@ import { getPriceForMarketCrop } from '../data/marketPrices';
 import { recommendBestMarket, calculateNetEarnings } from '../services/marketService';
 import { MarketRecommendation } from '../types';
 import { formatINR } from '../utils/format';
+import { useApp } from '../context/AppContext';
 
 export default function MarketComparison() {
+  const { t } = useApp();
   const [params, setParams] = useSearchParams();
   const defaultCropId = crops[0]?.id ?? '';
   const requestedCropId = params.get('crop');
@@ -60,7 +62,7 @@ export default function MarketComparison() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">Compare Markets</h1>
+      <h1 className="text-2xl font-semibold text-soil-900 sm:text-3xl">{t('Compare Markets')}</h1>
       <p className="mt-1.5 max-w-2xl text-soil-900/60">
         AgriLink doesn’t just compare prices — it estimates your actual take-home earnings after transportation, so you can see which market really pays best.
       </p>
@@ -68,7 +70,7 @@ export default function MarketComparison() {
       <div className="mt-6 rounded-card border border-soil-100 bg-white p-5">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
           <Select
-            label="Crop"
+            label={t('Crop')}
             value={cropId}
             onChange={(e) => {
               const nextCropId = e.target.value;
@@ -78,24 +80,24 @@ export default function MarketComparison() {
                 return current;
               });
             }}
-            options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${c.name}` }))}
+            options={crops.map((c) => ({ value: c.id, label: `${c.icon} ${t(c.name)}` }))}
           />
           <Input
-            label="Quantity (Quintals)"
+            label={`${t('Quantity')} (${t('Quintal')})`}
             type="number"
             min={1}
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
           />
           <Input
-            label="Transport cost (₹/km)"
+            label={`${t('Transportation Cost')} (₹/km)`}
             type="number"
             min={1}
             value={transportRate}
             onChange={(e) => setTransportRate(Number(e.target.value))}
           />
           <div className="flex items-end">
-            <Button fullWidth onClick={runCompare}>Compare</Button>
+            <Button fullWidth onClick={runCompare}>{t('Compare')}</Button>
           </div>
         </div>
       </div>
@@ -143,7 +145,7 @@ export default function MarketComparison() {
       <div className="mt-14 rounded-card border border-soil-100 bg-white p-5 sm:p-6">
         <div className="flex items-center gap-2">
           <Calculator size={18} className="text-field-700" />
-          <h2 className="text-lg font-semibold text-soil-900">Profit Calculator</h2>
+          <h2 className="text-lg font-semibold text-soil-900">{t('Profit Calculator')}</h2>
         </div>
         <p className="mt-1 text-sm text-soil-900/60">Try your own numbers for any market and crop.</p>
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -155,15 +157,15 @@ export default function MarketComparison() {
           </div>
           <div className="flex flex-col justify-center gap-3 rounded-card bg-soil-50 p-5">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-soil-900/60">Gross Revenue</span>
+              <span className="text-soil-900/60">{t('Gross Revenue')}</span>
               <span className="font-semibold text-soil-900">{formatINR(calcResult.grossRevenue)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-soil-900/60">Transportation Cost</span>
+              <span className="text-soil-900/60">{t('Transportation Cost')}</span>
               <span className="font-semibold text-clay-500">− {formatINR(calcResult.transportCost)}</span>
             </div>
             <div className="mt-1 flex items-center justify-between border-t border-soil-100 pt-3">
-              <span className="text-sm font-medium text-soil-900">Estimated Net Revenue</span>
+              <span className="text-sm font-medium text-soil-900">{t('Estimated Net Revenue')}</span>
               <span className="text-xl font-bold text-field-700">{formatINR(calcResult.netEarnings)}</span>
             </div>
           </div>
