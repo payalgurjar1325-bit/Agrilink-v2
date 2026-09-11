@@ -21,6 +21,8 @@ export function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const { language, setLanguage, user, logout, t } = useApp();
   const navigate = useNavigate();
+  const dashboardPath = user?.role === 'fpo' ? '/fpo-dashboard' : '/dashboard';
+  const dashboardLabel = user?.role === 'fpo' ? 'FPO Dashboard' : 'Dashboard';
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium transition-colors ${isActive ? 'text-field-700' : 'text-soil-900/70 hover:text-field-700'}`;
@@ -77,8 +79,8 @@ export function Navbar() {
 
           {user ? (
             <>
-              <Link to="/dashboard" className="text-sm font-medium text-soil-900/70 hover:text-field-700">
-                {t('Dashboard')}
+              <Link to={dashboardPath} className="text-sm font-medium text-soil-900/70 hover:text-field-700">
+                {t(dashboardLabel)}
               </Link>
               <button
                 onClick={() => { logout(); navigate('/'); }}
@@ -134,8 +136,8 @@ export function Navbar() {
           <div className="mt-3 flex gap-2">
             {user ? (
               <>
-                <Link to="/dashboard" className="flex-1" onClick={() => setOpen(false)}>
-                  <Button variant="secondary" fullWidth>{t('Dashboard')}</Button>
+                <Link to={dashboardPath} className="flex-1" onClick={() => setOpen(false)}>
+                  <Button variant="secondary" fullWidth>{t(dashboardLabel)}</Button>
                 </Link>
                 <Button variant="danger" fullWidth onClick={() => { logout(); setOpen(false); navigate('/'); }}>
                   {t('Log out')}

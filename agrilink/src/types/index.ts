@@ -1,7 +1,7 @@
 export type PriceTrend = 'up' | 'down' | 'stable';
 export type DemandLevel = 'high' | 'medium' | 'low' | 'stable';
 export type QualityGrade = 'A' | 'B' | 'C';
-export type UserRole = 'farmer' | 'buyer';
+export type UserRole = 'farmer' | 'buyer' | 'fpo';
 export type Language = 'en' | 'hi' | 'mr';
 export type ContactRequestStatus = 'Pending' | 'Approved' | 'Rejected' | 'Resolved';
 export type ReviewStatus = 'Pending' | 'Approved' | 'Rejected';

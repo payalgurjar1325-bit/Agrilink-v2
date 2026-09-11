@@ -39,7 +39,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!saved) return null;
     try {
       const parsed = JSON.parse(saved) as AuthUser;
-      return parsed && (parsed.role === 'farmer' || parsed.role === 'buyer') ? parsed : null;
+      return parsed && (parsed.role === 'farmer' || parsed.role === 'buyer' || parsed.role === 'fpo') ? parsed : null;
     } catch {
       return null;
     }

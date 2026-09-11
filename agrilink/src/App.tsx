@@ -18,6 +18,7 @@ import AdminContactRequests from './pages/AdminContactRequests';
 import Testimonials from './pages/Testimonials';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import FpoDashboard from './pages/FpoDashboard';
 import { ThemeSelector } from './components/ThemeSelector';
 import { AgriChatbot } from './components/AgriChatbot';
 
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
           <Route path="/sell-produce" element={<SellProduce />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/fpo-dashboard" element={<FpoDashboard />} />
           <Route path="/price-alerts" element={<PriceAlerts />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

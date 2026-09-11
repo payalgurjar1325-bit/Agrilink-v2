@@ -7,6 +7,7 @@ import { StatCard } from '../components/StatCard';
 import { Badge, DemandBadge } from '../components/Badge';
 import { Button } from '../components/Button';
 import { PriceTrendChart } from '../components/PriceTrendChart';
+import { PricePrediction } from '../components/PricePrediction';
 import { MarketCard } from '../components/MarketCard';
 import { getCropById, crops } from '../data/crops';
 import { markets } from '../data/markets';
@@ -162,6 +163,8 @@ export default function Dashboard() {
           </table>
         </div>
       </div>
+
+      <PricePrediction />
 
       {/* Market trends */}
       <div className="mt-8 rounded-card border border-soil-100 bg-white p-5">

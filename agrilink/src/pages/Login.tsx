@@ -6,7 +6,7 @@ import { Button } from '../components/Button';
 import { useApp } from '../context/AppContext';
 
 export default function Login() {
-  const [role, setRole] = useState<'farmer' | 'buyer'>('farmer');
+  const [role, setRole] = useState<'farmer' | 'buyer' | 'fpo'>('farmer');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const { login, t } = useApp();
@@ -15,7 +15,7 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login({ name: identifier.trim(), role });
-    navigate(role === 'farmer' ? '/dashboard' : '/marketplace');
+    navigate(role === 'farmer' ? '/dashboard' : role === 'fpo' ? '/fpo-dashboard' : '/marketplace');
   };
 
   return (
@@ -28,14 +28,14 @@ export default function Login() {
         <p className="mt-1 text-sm text-soil-900/60">{t('Log in to AgriLink to continue.')}</p>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 rounded-card border border-soil-100 bg-white p-1">
-        {(['farmer', 'buyer'] as const).map((r) => (
+      <div className="mb-6 grid grid-cols-3 rounded-card border border-soil-100 bg-white p-1">
+        {(['farmer', 'buyer', 'fpo'] as const).map((r) => (
           <button
             key={r}
             onClick={() => setRole(r)}
             className={`rounded-card py-2.5 text-sm font-medium capitalize transition-colors ${role === r ? 'bg-field-700 text-white' : 'text-soil-900/60'}`}
           >
-            {t(r === 'farmer' ? 'Farmer' : 'Buyer')}
+            {t(r === 'farmer' ? 'Farmer' : r === 'buyer' ? 'Buyer' : 'FPO')}
           </button>
         ))}
       </div>
@@ -46,7 +46,7 @@ export default function Login() {
         <div className="flex justify-end">
           <Link to="#" className="text-xs font-medium text-field-700 hover:underline">{t('Forgot Password?')}</Link>
         </div>
-        <Button type="submit" fullWidth size="lg">{t('Login')} {t('as')} {t(role === 'farmer' ? 'Farmer' : 'Buyer')}</Button>
+        <Button type="submit" fullWidth size="lg">{t('Login')} {t('as')} {t(role === 'farmer' ? 'Farmer' : role === 'buyer' ? 'Buyer' : 'FPO')}</Button>
       </form>
 
       <p className="mt-5 text-center text-sm text-soil-900/60">
